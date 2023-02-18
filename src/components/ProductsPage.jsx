@@ -18,9 +18,13 @@ const ProductsPage = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`https://dummyjson.com/products?limit=10&skip=${10 * page}`)
+      .get(
+        page === 1
+          ? `https://dummyjson.com/products?limit=10`
+          : `https://dummyjson.com/products?limit=10&skip=${10 * (page - 1)}`
+      )
       .then((res) => {
-        // console.log(res.data.products);
+        console.log(res.data);
         setProducts(res.data.products);
         setCount(Math.ceil(res.data.total / res.data.limit));
       })
@@ -50,7 +54,9 @@ const ProductsPage = () => {
                 </Grid>
               ))}
           </Grid>
-          <Pagination count={count} page={page} onChange={handleChange} />
+          {products?.length > 0 && (
+            <Pagination count={count} page={page} onChange={handleChange} />
+          )}
         </Container>
       )}
     </Fragment>
